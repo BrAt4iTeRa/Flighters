@@ -18,7 +18,7 @@ struct flights {
 	int cost;
 };
 void menu(flights*, int);
-void creator(flights*&, int&);
+flights* creator(flights*, int&);
 void printDatabase(flights*, int);
 void sorting(flights*, int);
 void sortingNumb(flights*, int);
@@ -47,8 +47,8 @@ void menu(flights* p, int amount) {
 	int paragraph;
 	do {
 		printf_s("\nHello! Welcome to the <Flights.inc> - flight editor.\n\nSelect the action you want to take:\n");
-		printf_s("1. Make a database.\n2. Print your database.\n3. Correct your database.\n4. Search by the specified parameter.\n");//дописать
-		printf_s("5. Sorting a database by a given parameter.\n6. Deleting the selected database.\n7. Partial Match Search.\n0. Exit.");//дописать
+		printf_s("1. Make a database.\n2. Print your database.\n3. Correct your database.\n4. Search by the specified parameter.\n");
+		printf_s("5. Sorting a database by a given parameter.\n6. Deleting the selected database.\n0. Exit.");
 		printf_s("Enter the number of the desired action:\n");
 		do {
 			if (!(scanf_s("%d", &paragraph))) {
@@ -61,7 +61,7 @@ void menu(flights* p, int amount) {
 		} while (1);
 		switch (paragraph) {
 		case 1:
-			creator(p, amount);
+			p = creator(p, amount);
 			break;
 		case 2:
 			printDatabase(p, amount);
@@ -78,9 +78,9 @@ void menu(flights* p, int amount) {
 		case 6:
 			deleteStruct(p, amount);
 			break;
-		/*case 7:
-			partialMatchSearch(p, amount);
-			break;*/
+			/*case 7:
+				partialMatchSearch(p, amount);
+				break;*/
 		case 0:
 			system("CLS");
 			printf_s("Good bye. Have a nice day!");
@@ -89,12 +89,12 @@ void menu(flights* p, int amount) {
 		}
 	} while (1);
 }
-void creator(flights*& p, int& сounter) {
+flights* creator(flights* p, int& сounter) {
 	int end = 1;
 	system("CLS");
-	printf_s("Вы выбрали пункт создать таблицу.\n");
-	for (;end !=0; сounter++) {
-		p = (flights*)realloc(p, sizeof(flights) * (сounter+1));
+	printf_s("Hello. It's creator:\n");
+	for (; end != 0; сounter++) {
+		p = (flights*)realloc(p, sizeof(flights) * (сounter + 1));
 		printf_s("It's a flight №%d. Enter information, following instructions.\nEnter nomber of flight:\n", сounter + 1);
 		scanfMod(p[сounter].number);
 		printf_s("Enter destination:\n");
@@ -158,7 +158,7 @@ void creator(flights*& p, int& сounter) {
 	printf_s("=======================================================\n");
 	printf_s("\tRetun you to menu...\n");
 	printf_s("=======================================================\n");
-	return;
+	return p;
 }
 void printDatabase(flights* p, int amount) {
 	system("CLS");
@@ -429,7 +429,7 @@ void correctDatabase(flights* p, int amount) {
 	} while (number != 0);
 	return;
 }
-void deleteStruct(flights* &p, int &amount) {
+void deleteStruct(flights* &p, int &amount) {// как 
 	int number, counter;
 	system("CLS");
 	printf_s("Enter the flight number you want to delete:\n");
@@ -452,10 +452,10 @@ void deleteStruct(flights* &p, int &amount) {
 	if (amount == 1) {
 		printf_s("This is the only flight, are you sure?\n1. Yes\n2. No");
 		scanf_s("%d", &number);
-		if (number == 2) return ;
+		if (number == 2) return;
 		amount--;
-		p = (flights*)malloc(sizeof(flights)*1);
-		return ;
+		p = (flights*)malloc(sizeof(flights) * 1);
+		return;
 	}
 	for (; counter < amount; counter++) {
 		p[counter] = p[counter + 1];
@@ -483,7 +483,7 @@ void search(flights* p, int amount) {
 		do {
 			printf_s("Enter the flight number: ");
 			if (!(scanf_s("%d", &number))) {
-				printf_s("Номер вылета не может содержать букы, повторите ввод:\n");
+				printf_s("Eroro! Try again:\n");
 				rewind(stdin);
 			}
 			else break;
@@ -492,9 +492,9 @@ void search(flights* p, int amount) {
 			if ((p)[count].number == number) {
 				printf_s("=======================================================\n\t\tРейс №%d...\n", number);
 				printf_s("=======================================================\n\n");
-				printf_s("\tНомер рейса:\t\t%d\n\tПункт назначения:\t%s ", (p)[count].number, (p)[count].destination);
-				printf_s("\n\tВремя вылета:\t\t%d:%d\n\t", (p)[count].time.hour, (p)[count].time.minutes);
-				printf_s("Дата вылета:\t\t%d.%d.%d\n\tСтоимость билета:\t%d\n", (p)[count].date.year, (p)[count].date.month, (p)[count].date.day, p[count].cost);
+				printf_s("\tFlight number:\t%d\n\tDestination:\t%s ", p[amount].number, p[amount].destination);
+				printf_s("\n\tTime of flight:\t\t%d:%d\n\t", p[amount].time.hour, p[amount].time.minutes);
+				printf_s("Date:\t\t%d.%d.%d\n\tTicket cost:\t\t%d\n", p[amount].date.year, p[amount].date.month, p[amount].date.day, p[amount].cost);
 			}
 		}
 		printf_s("=======================================================\n");
@@ -517,9 +517,9 @@ void search(flights* p, int amount) {
 			if ((strcmp(destination, p[count].destination)) == 0) {
 				printf_s("=======================================================\n\t\tРейс №%d...\n", count + 1);
 				printf_s("=======================================================\n\n");
-				printf_s("\tНомер рейса:\t\t%d\n\tПункт назначения:\t%s ", (p)[count].number, (p)[count].destination);
-				printf_s("\n\tВремя вылета:\t\t%d:%d\n\t", (p)[count].time.hour, (p)[count].time.minutes);
-				printf_s("Дата вылета:\t\t%d.%d.%d\n\tСтоимость билета:\t%d\n", (p)[count].date.year, (p)[count].date.month, (p)[count].date.day, p[count].cost);
+				printf_s("\tFlight number:\t%d\n\tDestination:\t%s ", p[amount].number, p[amount].destination);
+				printf_s("\n\tTime of flight:\t\t%d:%d\n\t", p[amount].time.hour, p[amount].time.minutes);
+				printf_s("Date:\t\t%d.%d.%d\n\tTicket cost:\t\t%d\n", p[amount].date.year, p[amount].date.month, p[amount].date.day, p[amount].cost);
 				number++;
 			}
 		}
@@ -531,7 +531,7 @@ void search(flights* p, int amount) {
 		do {
 			printf_s("Enter the hour: ");
 			if (!(scanf_s("%d", &hour))) {
-				printf_s("Час вылета не может содержать букы, повторите ввод:\n");
+				printf_s("Eror! Try again:\n");
 				rewind(stdin);
 			}
 			else break;
@@ -539,7 +539,7 @@ void search(flights* p, int amount) {
 		do {
 			printf_s("Enter the minute of departure: ");
 			if (!(scanf_s("%d", &min))) {
-				printf_s("Время вылета не может содержать букы, повторите ввод:\n");
+				printf_s("Error! Try again:\n");
 				rewind(stdin);
 			}
 			else break;
@@ -547,11 +547,11 @@ void search(flights* p, int amount) {
 		for (int count = 0; count < amount; count++) {
 			if ((p)[count].time.hour == hour)
 				if ((p)[count].time.minutes == min) {
-					printf_s("=======================================================\n\t\tРейс №%d...\n", count + 1);
+					printf_s("=======================================================\n\t\tFlight №%d...\n", count + 1);
 					printf_s("=======================================================\n\n");
-					printf_s("\tНомер рейса:\t\t%d\n\tПункт назначения:\t%s ", (p)[count].number, (p)[count].destination);
-					printf_s("\n\tВремя вылета:\t\t%d:%d\n\t", (p)[count].time.hour, (p)[count].time.minutes);
-					printf_s("Дата вылета:\t\t%d.%d.%d\n\tСтоимость билета:\t%d\n", (p)[count].date.year, (p)[count].date.month, (p)[count].date.day, p[count].cost);
+					printf_s("\tFlight number:\t%d\n\tDestination:\t%s ", p[amount].number, p[amount].destination);
+					printf_s("\n\tTime of flight:\t\t%d:%d\n\t", p[amount].time.hour, p[amount].time.minutes);
+					printf_s("Date:\t\t%d.%d.%d\n\tTicket cost:\t\t%d\n", p[amount].date.year, p[amount].date.month, p[amount].date.day, p[amount].cost);
 					number++;
 				}
 			if (number == 0) printf_s("There are no matches");
